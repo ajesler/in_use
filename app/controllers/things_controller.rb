@@ -1,5 +1,5 @@
 class ThingsController < ApplicationController
-  before_action :load_thing, only: [:show, :update, :slack]
+  before_action :load_thing, only: [:show, :update, :slack, :in_use, :free]
 
   def index
     @things = Thing.all
@@ -13,6 +13,16 @@ class ThingsController < ApplicationController
   def update
     @thing.update!(thing_params)
     json_response(@thing)
+  end
+
+  def in_use
+    @thing.update!(in_use: true)
+    json_response({ message: "in use" })
+  end
+
+  def free
+    @thing.update!(in_use: false)
+    json_response({ message: "free" })
   end
 
   def slack
