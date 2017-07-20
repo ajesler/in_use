@@ -32,15 +32,7 @@ class ThingsController < ApplicationController
       return
     end
 
-    in_use = @thing.in_use?
-    slack_response({
-      attachments: [
-        {
-          title: "The #{@thing.name} is #{"not " if !in_use}in use",
-          color: in_use ? "danger" : "good",
-        }
-      ]
-    })
+    slack_response(SlackResponse.for(@thing))
   end
 
   private
