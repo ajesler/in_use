@@ -29,10 +29,5 @@ module InUse
         ENV[key.to_s] = value
       end if File.exists?(env_file)
     end
-
-   Slack.configure do |config|
-     config.token = ENV['SLACK_API_TOKEN']
-     fail 'Missing ENV[SLACK_API_TOKEN]!' unless config.token
-   end
   end
 end
