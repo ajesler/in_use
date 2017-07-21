@@ -27,10 +27,10 @@ class NotifyQueuedUsers
   end
 
   def self.notification_text(thing, queue_size)
-    "The #{thing.name} is free (notifying #{pluralize(queue_size, 'person')})"
+    "The #{thing.name} is free (notifed #{pluralize(queue_size, 'person')})"
   end
 
   def self.pluralize(count, word)
-    "#{count} #{word.pluralize}"
+    "#{count} #{count == 1 ? word : word.pluralize}"
   end
 end

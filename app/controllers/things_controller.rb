@@ -41,7 +41,21 @@ class ThingsController < ApplicationController
     messages = []
     if slack_text = slack_params[:text]
       if slack_text.start_with?("help")
-        messages << "Available commands are help, status, notify, and remove"
+        messages << <<-HELP
+Available commands are help, status, notify, and remove
+
+*help*
+    show the help text
+
+*status*
+    show who is in the queue
+
+*notify*
+    add yourself to the queue to be notified when the thing becomes free
+
+*remove*
+    remove yourself from the queue
+HELP
       end
 
       if slack_text.start_with?("notify")
@@ -49,7 +63,15 @@ class ThingsController < ApplicationController
       end
 
       if slack_text.start_with?("queue")
-        messages << "In the queue are #{@thing.queued_slack_users.pluck(:slack_user_name).join(', ')}"
+        slack_users = @thing.queued_slack_users.map do |u|
+          "<@#{u.slack_user_id}>"
+        end
+
+        if slack_users.count > 0
+          messages << "The queue consists of #{slack_users.join(', ')}"
+        else
+          messages << "The queue is empty"
+        end
       end
 
       if slack_text.start_with?("remove")

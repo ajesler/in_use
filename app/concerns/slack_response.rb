@@ -24,7 +24,8 @@ class SlackResponse
           title: title,
           text: @messages.to_sentence,
           color: thing.in_use? ? "danger" : "good",
-          fields: @fields
+          fields: @fields,
+          mrkdwn_in: ["text"],
         }
       ]
     }
