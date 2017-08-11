@@ -7,7 +7,7 @@ server 'vps.ajesler.nz', port: 2876, roles: [:web, :app, :db], primary: true
 set :repo_url,        'git@github.com:ajesler/in_use.git'
 set :application,     'in_use'
 set :user,            'deploy'
-set :puma_threads,    [4, 16]
+set :puma_threads,    [1, 4]
 set :puma_workers,    0
 
 # Don't change these unless you know what you're doing
@@ -34,8 +34,16 @@ set :puma_init_active_record, true  # Change to false when not using ActiveRecor
 # set :keep_releases, 5
 
 ## Linked Files & Directories (Default None):
-# set :linked_files, %w{config/database.yml}
-# set :linked_dirs,  %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :linked_files, %w{db/production.sqlite3}
+set :linked_dirs,  %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+
+namespace :sqlite do
+  desc 'Create a sqlite database file'
+  task :create_db do
+    execute "mkdir #{shared_path}/db"
+    execute "sqlite #{shared_path}/db/production.sqlite3"
+  end
+end
 
 namespace :puma do
   desc 'Create Directories for Puma Pids and Socket'
@@ -64,7 +72,7 @@ namespace :deploy do
   desc 'Initial Deploy'
   task :initial do
     on roles(:app) do
-      before 'deploy:restart', 'puma:start'
+      before 'deploy:restart', 'puma:start', 'sqlite:create_db'
       invoke 'deploy'
     end
   end
