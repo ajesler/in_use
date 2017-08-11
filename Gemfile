@@ -3,7 +3,6 @@ source 'https://rubygems.org'
 gem 'rails', '~> 5.1.3'
 # Use sqlite3 as the database for Active Record
 # gem 'sqlite3'
-gem 'pg'
 
 gem 'faraday', '~> 0.12.0'
 
