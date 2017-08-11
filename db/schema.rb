@@ -13,19 +13,19 @@
 ActiveRecord::Schema.define(version: 20170720232526) do
 
   create_table "queued_slack_users", force: :cascade do |t|
-    t.string   "slack_user_name"
-    t.string   "slack_user_id"
-    t.integer  "thing_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.string "slack_user_name"
+    t.string "slack_user_id"
+    t.integer "thing_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "things", force: :cascade do |t|
-    t.string   "name"
-    t.text     "description"
-    t.boolean  "in_use"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.string "name"
+    t.text "description"
+    t.boolean "in_use"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
