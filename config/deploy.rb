@@ -81,6 +81,13 @@ namespace :deploy do
     end
   end
 
+  desc 'Create the .env file'
+  task :create_dotenv do
+    on roles(:app) do
+      execute "touch #{shared_path}/.env"
+    end
+  end
+
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
@@ -89,6 +96,7 @@ namespace :deploy do
   end
 
   before :starting,     :check_revision
+  before 'deploy:check:linked_files', 'deploy:create_dotenv'
   after  :finishing,    :compile_assets
   after  :finishing,    :cleanup
   after  :finishing,    :restart
