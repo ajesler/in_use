@@ -34,15 +34,19 @@ set :puma_init_active_record, true  # Change to false when not using ActiveRecor
 # set :keep_releases, 5
 
 ## Linked Files & Directories (Default None):
-set :linked_files, %w{db/production.sqlite3}
-set :linked_dirs,  %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :linked_files, %w{db/production.sqlite3 .env}
+set :linked_dirs,  %w{bin log db tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
 namespace :sqlite do
   desc 'Create a sqlite database file'
   task :create_db do
-    execute "mkdir #{shared_path}/db"
-    execute "sqlite #{shared_path}/db/production.sqlite3"
+    on roles(:db) do
+      execute "sqlite3 #{shared_path}/db/production.sqlite3 '.databases'"
+    end
   end
+
+  before 'deploy:symlink:shared', 'sqlite:create_db'
+  before 'deploy:check:linked_files', 'sqlite:create_db'
 end
 
 namespace :puma do
@@ -72,7 +76,7 @@ namespace :deploy do
   desc 'Initial Deploy'
   task :initial do
     on roles(:app) do
-      before 'deploy:restart', 'puma:start', 'sqlite:create_db'
+      before 'deploy:restart', 'puma:start'
       invoke 'deploy'
     end
   end
