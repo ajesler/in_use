@@ -35,7 +35,7 @@ set :keep_releases, 1
 
 ## Linked Files & Directories (Default None):
 set :linked_files, %w{db/production.sqlite3 .env}
-set :linked_dirs,  %w{log db tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+set :linked_dirs,  %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
 set :bundle_binstubs, nil
 
