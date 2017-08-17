@@ -18,6 +18,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'foreman'
   gem 'capistrano',         require: false
   gem 'capistrano-rails',   require: false
   gem 'capistrano-bundler', require: false

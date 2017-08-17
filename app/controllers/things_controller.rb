@@ -1,4 +1,5 @@
 class ThingsController < ApplicationController
+  before_action :check_auth_token, except: [:slack]
   before_action :load_thing, only: [:show, :update, :slack, :in_use, :free]
 
   def index
@@ -32,7 +33,8 @@ class ThingsController < ApplicationController
     slack_token = slack_params[:token]
 
     if !slack_token.present? || slack_token != ENV['SLACK_TOKEN']
-      slack_response({ message: "the token '#{slack_token}' is not authorized" }, status: :unauthorized)
+      raise Unauthorized
+      # slack_response({ message: "the token '#{slack_token}' is not authorized" }, status: :unauthorized)
       return
     end
 
@@ -86,6 +88,15 @@ HELP
   end
 
   private
+
+  def check_auth_token
+    token = params.require(:token)
+    if !token.present? || token != ENV['AUTH_TOKEN']
+      raise Unauthorized
+    end
+  rescue ActionController::ParameterMissing
+    raise Unauthorized
+  end
 
   def thing_params
     params.permit(:id, :in_use)
