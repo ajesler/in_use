@@ -93,7 +93,7 @@ HELP
   def check_auth_token
     auth_token = params["token"].try!(:strip)
     if !auth_token.present? || auth_token != ENV['AUTH_TOKEN'].strip
-      Rails.logger.info("Failed login with auth token '#{auth_token}'")
+      Rails.logger.info("Failed login with auth token '#{auth_token}'. Required token is #{ENV['AUTH_TOKEN']}")
       raise Unauthorized
     end
   rescue ActionController::ParameterMissing
