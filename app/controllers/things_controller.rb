@@ -30,11 +30,12 @@ class ThingsController < ApplicationController
   end
 
   def slack
-    slack_token = slack_params[:token]
+    slack_token = slack_params[:token].try!(:strip)
 
     if !slack_token.present? || slack_token != ENV['SLACK_TOKEN']
       raise Unauthorized
-      # slack_response({ message: "the token '#{slack_token}' is not authorized" }, status: :unauthorized)
+        Rails.logger.info("Failed auth with slack token '#{slack_token}'")
+        # slack_response({ message: "Unauthorized" }, status: :unauthorized)
       return
     end
 
@@ -90,8 +91,9 @@ HELP
   private
 
   def check_auth_token
-    token = params.require(:token)
-    if !token.present? || token != ENV['AUTH_TOKEN']
+    auth_token = params["token"].try!(:strip)
+    if !auth_token.present? || auth_token != ENV['AUTH_TOKEN'].strip
+      Rails.logger.info("Failed login with auth token '#{auth_token}'")
       raise Unauthorized
     end
   rescue ActionController::ParameterMissing
