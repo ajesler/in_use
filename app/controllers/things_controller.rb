@@ -43,6 +43,7 @@ class ThingsController < ApplicationController
 
     messages = []
     if slack_text = slack_params[:text]
+      # TODO This should be the default response of /pool
       if slack_text.start_with?("help")
         messages << <<-HELP
 Available commands are help, status, notify, and remove

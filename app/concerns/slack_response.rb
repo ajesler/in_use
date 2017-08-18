@@ -18,6 +18,8 @@ class SlackResponse
       @fields << { title: "In Queue", short: true, value: user_in_queue_text }
     end
 
+    # TODO username and icon not working?
+    # TODO escape emoji in attachement text field when doing the time.
     {
       username: ENV['SLACK_BOT_USERNAME'] || "ThingBot",
       icon_emoji: ENV['SLACK_BOT_EMOJI'] || ":thinking_face:",
