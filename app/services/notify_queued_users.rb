@@ -5,7 +5,8 @@ class NotifyQueuedUsers
 
     if queued_user_count > 0
        users_to_notify.each do |user|
-        send_notification(user, thing, queued_user_count)
+         other_users = users_to_notify.reject { |u| u == user }.map { |u| u.slack_user_name }
+         send_notification(user, thing, other_users)
       end
 
       users_to_notify.destroy_all
@@ -16,11 +17,11 @@ class NotifyQueuedUsers
 
   private
 
-  def self.send_notification(user, thing, queue_size)
+  def self.send_notification(user, thing, other_users)
     response = Faraday.post(ENV['SLACK_WEBHOOK_URL']) do |req|
       req.body = {
         channel: user.slack_user_id,
-        text: notification_text(thing, queue_size),
+        text: notification_text(thing, other_users),
         as_user: false,
         username: ENV['SLACK_BOT_USERNAME'] || "ThingBot",
         icon_emoji: ENV['SLACK_BOT_EMOJI'] || ":thinking_face:",
@@ -35,11 +36,11 @@ class NotifyQueuedUsers
     return response
   end
 
-  def self.notification_text(thing, queue_size)
-    "The #{thing.name} is free (notifed #{pluralize(queue_size, 'person')})"
-  end
-
-  def self.pluralize(count, word)
-    "#{count} #{count == 1 ? word : word.pluralize}"
+  def self.notification_text(thing, other_users)
+    message = "The #{thing.name} is free"
+    if other_users.present?
+      message += " (notified #{other_users.join(", ")})"
+    end
+    message
   end
 end
