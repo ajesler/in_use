@@ -28,6 +28,10 @@ class NotifyQueuedUsers
       req.headers['Content-Type'] = 'application/json'
     end
 
+    if !response.success?
+      Rails.logger.info("Failed to notify slack user #{user.slack_user_name} with #{response.status}: #{response.body}")
+    end
+
     return response
   end
 
