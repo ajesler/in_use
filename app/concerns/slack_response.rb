@@ -19,6 +19,8 @@ class SlackResponse
     end
 
     {
+      username: ENV['SLACK_BOT_USERNAME'] || "ThingBot",
+      icon_emoji: ENV['SLACK_BOT_EMOJI'] || ":thinking_face:",
       attachments: [
         {
           title: title,
