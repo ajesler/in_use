@@ -38,7 +38,6 @@ class ThingsController < ApplicationController
     if !slack_token.present? || slack_token != ENV['SLACK_TOKEN']
       raise Unauthorized
         Rails.logger.info("Failed auth with slack token '#{slack_token}'")
-        # slack_response({ message: "Unauthorized" }, status: :unauthorized)
       return
     end
 
@@ -49,12 +48,12 @@ class ThingsController < ApplicationController
       # TODO This should be the default response of /pool
       if slack_text.start_with?("help")
         messages << <<-HELP
-Available commands are help, status, notify, and remove
+Available commands are help, queue, notify, and remove
 
 *help*
     show the help text
 
-*status*
+*queue*
     show who is in the queue
 
 *notify*
