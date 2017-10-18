@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170720232526) do
+ActiveRecord::Schema.define(version: 20171018215115) do
 
   create_table "queued_slack_users", force: :cascade do |t|
     t.string "slack_user_name"
@@ -26,6 +26,15 @@ ActiveRecord::Schema.define(version: 20170720232526) do
     t.boolean "in_use"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "usage_events", force: :cascade do |t|
+    t.integer "thing_id_id"
+    t.string "event_type", limit: 10
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_type"], name: "index_usage_events_on_event_type"
+    t.index ["thing_id_id"], name: "index_usage_events_on_thing_id_id"
   end
 
 end

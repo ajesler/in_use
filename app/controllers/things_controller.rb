@@ -18,11 +18,14 @@ class ThingsController < ApplicationController
 
   def in_use
     @thing.update!(in_use: true)
+    @thing.usage_events.create!(event_type: Thing::IN_USE)
+
     json_response({ message: "in use", queue_size: @thing.queued_slack_users.count })
   end
 
   def free
     @thing.update!(in_use: false)
+    @thing.usage_events.create!(event_type: Thing::FREE)
 
     notified_user_count = NotifyQueuedUsers.for(@thing)
 
